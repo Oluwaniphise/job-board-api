@@ -49,7 +49,7 @@ export class AuthController {
    */
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  async googleAuthCallback(@Req() req: Request, @Res() res: Response) {
+  googleAuthCallback(@Req() req: Request, @Res() res: Response) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { accessToken, user } = req.user as any;
 
