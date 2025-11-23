@@ -1,0 +1,55 @@
+import { Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import {
+  Strategy,
+  VerifyCallback,
+  StrategyOptions,
+} from 'passport-google-oauth20';
+import { ConfigService } from '@nestjs/config';
+import { AuthService } from 'src/auth/auth.service';
+
+@Injectable()
+export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
+  constructor(
+    private configService: ConfigService,
+    private authService: AuthService,
+  ) {
+    super({
+      clientID: configService.get('GOOGLE_CLIENT_ID')!,
+      clientSecret: configService.get('GOOGLE_CLIENT_SECRET')!,
+      callbackURL: configService.get('GOOGLE_CALLBACK_URL')!,
+      scope: ['email', 'profile'], // Request email and profile data
+    } as StrategyOptions);
+  }
+
+  /**
+   * This method is called after Google successfully authenticates the user
+   * and redirects them back to our callback URL.
+   * @param accessToken - Token received from Google (used for Google API access).
+   * @param refreshToken - Token for refreshing access (if scope requests offline access).
+   * @param profile - The user's profile data returned by Google.
+   * @param done - Passport callback function to signal authentication completion.
+   */
+  async validate(
+    accessToken: string,
+    refreshToken: string,
+    profile: any,
+    done: VerifyCallback,
+  ): Promise<any> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const { name, emails } = profile;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const email = emails[0].value;
+
+    // We delegate the logic of finding/creating the user and generating the final JWT
+    const user = await this.authService.validateSocialUser(
+      email,
+      name.givenName,
+      name.familyName,
+      'Candidate', // Default role for social sign-ups
+    );
+
+    // Pass the user object back to Passport. This object will be attached to the request (req.user)
+    done(null, user);
+  }
+}
