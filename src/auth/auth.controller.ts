@@ -55,7 +55,7 @@ export class AuthController {
 
     // Final Step: Redirect the user back to the Next.js frontend.
     // The frontend extracts the token and user info from the query parameters.
-    const frontendRedirectUrl = `http://localhost:3000/dashboard?token=${accessToken}&userId=${user._id}&role=${user.role}`;
+    const frontendRedirectUrl = `http://localhost:3001/dashboard?token=${accessToken}&userId=${user._id}&role=${user.role}`;
 
     // Use the express response object to handle the redirect
     res.redirect(frontendRedirectUrl);
