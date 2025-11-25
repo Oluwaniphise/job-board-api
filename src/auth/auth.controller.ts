@@ -53,10 +53,7 @@ export class AuthController {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { accessToken, user } = req.user as any;
 
-    // Final Step: Redirect the user back to the Next.js frontend.
-    // The frontend extracts the token and user info from the query parameters.
-
-    const frontendRedirectUrl = `http://localhost:3000/dashboard?token=${accessToken}&userId=${user._id}&role=${user.role}`;
+    const frontendRedirectUrl = `${process.env.GOOGLE_FRONT_END_REDIRECT_URL}?token=${accessToken}&userId=${user._id}&role=${user.role}&firstName=${user.firstName}&lastName=${user.lastName}&email=${user.email}`;
 
     // Use the express response object to handle the redirect
     res.redirect(frontendRedirectUrl);

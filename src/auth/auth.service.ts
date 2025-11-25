@@ -16,12 +16,20 @@ export class AuthService {
 
   private generateToken(user: User): {
     accessToken: string;
-    user: { _id: string; email: string; role: string };
+    user: {
+      _id: string;
+      email: string;
+      role: string;
+      firstName: string;
+      lastName: string;
+    };
   } {
     const payload = {
       email: user.email,
       sub: user._id.toString(),
       role: user.role,
+      firstName: user.firstName,
+      lastName: user.lastName,
     };
 
     const accessToken = this.jwtService.sign(payload);
@@ -32,6 +40,8 @@ export class AuthService {
         _id: user._id.toString(),
         email: user.email,
         role: user.role,
+        firstName: user.firstName,
+        lastName: user.lastName,
       },
     };
   }
@@ -55,7 +65,13 @@ export class AuthService {
 
   async login(loginDto: LoginDto): Promise<{
     accessToken: string;
-    user: { _id: string; email: string; role: string };
+    user: {
+      _id: string;
+      email: string;
+      role: string;
+      firstName: string;
+      lastName: string;
+    };
   }> {
     const user = await this.usersService.findByEmail(loginDto.email);
 
