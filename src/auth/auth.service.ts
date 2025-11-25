@@ -42,11 +42,11 @@ export class AuthService {
     }
 
     const salt = await bcrypt.genSalt();
-    const passwordHash = await bcrypt.hash(createUserDto.password, salt);
+    const passwordHash = await bcrypt.hash(createUserDto.passwordHash, salt);
 
     const newUser = await this.usersService.createUser({
       ...createUserDto,
-      password: passwordHash,
+      passwordHash,
     });
 
     newUser.passwordHash = '';
@@ -90,10 +90,8 @@ export class AuthService {
     accessToken: string;
     user: { _id: string; email: string; role: string };
   }> {
-    // 1. Check if the user already exists (Login scenario)
     let user = await this.usersService.findByEmail(email);
     if (user) {
-      // User found: Log them in using the existing account
       return this.generateToken(user);
     }
 
@@ -107,7 +105,7 @@ export class AuthService {
       firstName,
       lastName,
       role: defaultRole,
-      password: tempPasswordHash,
+      passwordHash: tempPasswordHash,
     });
 
     return this.generateToken(user);

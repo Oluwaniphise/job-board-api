@@ -22,14 +22,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     } as StrategyOptions);
   }
 
-  /**
-   * This method is called after Google successfully authenticates the user
-   * and redirects them back to our callback URL.
-   * @param accessToken - Token received from Google (used for Google API access).
-   * @param refreshToken - Token for refreshing access (if scope requests offline access).
-   * @param profile - The user's profile data returned by Google.
-   * @param done - Passport callback function to signal authentication completion.
-   */
   async validate(
     accessToken: string,
     refreshToken: string,
