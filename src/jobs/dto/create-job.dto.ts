@@ -1,10 +1,4 @@
-import {
-  IsNotEmpty,
-  IsString,
-  IsArray,
-  IsIn,
-  IsMongoId,
-} from 'class-validator';
+import { IsNotEmpty, IsString, IsArray, IsIn } from 'class-validator';
 
 export class CreateJobDto {
   @IsString()
@@ -29,8 +23,7 @@ export class CreateJobDto {
   @IsIn(['Full-time', 'Part-time', 'Contract'])
   jobType: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @IsIn(['Mid-Level', 'Senior', 'Junior', 'Intern'])
   experienceLevel: string;
 
   @IsArray()
@@ -39,9 +32,4 @@ export class CreateJobDto {
 
   @IsIn(['Draft', 'Published', 'Archived'])
   status: string;
-
-  // IMPORTANT: In a real app, this should come from the Auth Guard, but for now we require it in the DTO.
-  @IsMongoId()
-  @IsNotEmpty()
-  employerId: string;
 }

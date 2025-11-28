@@ -17,7 +17,7 @@ export class AuthService {
   private generateToken(user: User): {
     accessToken: string;
     user: {
-      _id: string;
+      id: string;
       email: string;
       role: string;
       firstName: string;
@@ -37,7 +37,7 @@ export class AuthService {
     return {
       accessToken,
       user: {
-        _id: user._id.toString(),
+        id: user._id.toString(),
         email: user.email,
         role: user.role,
         firstName: user.firstName,
@@ -66,7 +66,7 @@ export class AuthService {
   async login(loginDto: LoginDto): Promise<{
     accessToken: string;
     user: {
-      _id: string;
+      id: string;
       email: string;
       role: string;
       firstName: string;
@@ -104,7 +104,7 @@ export class AuthService {
     defaultRole: 'Candidate',
   ): Promise<{
     accessToken: string;
-    user: { _id: string; email: string; role: string };
+    user: { id: string; email: string; role: string };
   }> {
     let user = await this.usersService.findByEmail(email);
     if (user) {

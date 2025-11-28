@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
@@ -6,7 +6,7 @@ import { UserRole } from 'src/users/entities/user.entity';
 
 export interface JwtPayload {
   email: string;
-  sub: string; // User ID
+  sub: string;
   role: UserRole;
 }
 
