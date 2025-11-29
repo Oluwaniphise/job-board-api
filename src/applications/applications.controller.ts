@@ -18,23 +18,9 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import type { Request } from 'express';
 import type { JwtPayload } from '../strategy/jwt-strategy';
 
-
 @Controller('applications')
 export class ApplicationsController {
   constructor(private readonly applicationsService: ApplicationsService) {}
-
-  // @Post()
-  // @UseGuards(JwtAuthGuard, RolesGuard)
-  // @Roles('Candidate')
-  // create(@Body() applyToJobDto: ApplyToJobDto, @Req() req: Request) {
-  //   const user = req.user as JwtPayload;
-  //   const candidateId = user.sub;
-
-  //   return this.applicationsService.createApplication(
-  //     applyToJobDto,
-  //     candidateId,
-  //   );
-  // }
 
   @Get('employer/job-applications/:jobId')
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -50,6 +36,11 @@ export class ApplicationsController {
       jobId,
       employerId,
     );
+  }
+
+  @Get('job/:jobId')
+  findAllApplicationsForJob(@Param('jobId') jobId: string) {
+    return this.applicationsService.findAllApplicationsForJob(jobId);
   }
 
   // @Get(':id')

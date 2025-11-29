@@ -7,7 +7,6 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { ApplyToJobDto } from './dto/apply-to-job.dto';
-import { UpdateApplyToJobDto } from './dto/update-apply-to-job.dto';
 import {
   Application,
   ApplicationDocument,
@@ -96,6 +95,16 @@ export class ApplicationsService {
     return applications;
   }
 
+  async findAllApplicationsForJob(jobId: string): Promise<Application[]> {
+    const applications = await this.applicationModel
+      .find({
+        jobId: new Types.ObjectId(jobId),
+      })
+      .exec();
+
+    return applications;
+  }
+
   /**
    * Lists all applications submitted by a candidate.
    */
@@ -106,7 +115,7 @@ export class ApplicationsService {
       .find({
         candidateId: new Types.ObjectId(candidateId),
       })
-      .populate('jobId', 'title status employerId')
+      .populate('jobId', 'title companyName status employerId')
       .exec();
   }
 
@@ -130,5 +139,19 @@ export class ApplicationsService {
     }
 
     return application;
+  }
+
+  async hasCandidateAppliedForJob(
+    jobId: string,
+    candidateId: string,
+  ): Promise<{ hasApplied: boolean }> {
+    await this.jobsService.findOneJob(jobId);
+
+    const existingApplication = await this.applicationModel.exists({
+      jobId: new Types.ObjectId(jobId),
+      candidateId: new Types.ObjectId(candidateId),
+    });
+
+    return { hasApplied: Boolean(existingApplication) };
   }
 }

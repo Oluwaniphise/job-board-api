@@ -55,6 +55,7 @@ export class CandidatesController {
       const putResult = await put(file.originalname, file.buffer, {
         access: 'public',
         contentType: file.mimetype,
+        addRandomSuffix: true, // prevent "blob already exists" errors when filenames collide
       });
       resumeUrl = putResult.url;
     }
@@ -79,5 +80,11 @@ export class CandidatesController {
       jobId,
       user.sub,
     );
+  }
+
+  @Get('jobs/:jobId/applications/status')
+  hasAppliedToJob(@Param('jobId') jobId: string, @Req() req: Request) {
+    const user = req.user as JwtPayload;
+    return this.applicationsService.hasCandidateAppliedForJob(jobId, user.sub);
   }
 }

@@ -29,9 +29,9 @@ export class FilesController {
     const { url, pathname } = await put(file.originalname, file.buffer, {
       access: 'public', // Set access to public so it can be downloaded via URL
       contentType: file.mimetype,
+      addRandomSuffix: true, // avoid collisions on repeated filenames
     });
 
-    // 2. Return the public URL to be saved in your database (MongoDB)
     return {
       resumeUrl: url,
       pathname: pathname,
