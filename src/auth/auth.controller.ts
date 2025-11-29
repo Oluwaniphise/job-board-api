@@ -53,7 +53,14 @@ export class AuthController {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { accessToken, user } = req.user as any;
 
-    const frontendRedirectUrl = `${process.env.GOOGLE_FRONT_END_REDIRECT_URL}?token=${accessToken}&userId=${user._id}&role=${user.role}&firstName=${user.firstName}&lastName=${user.lastName}&email=${user.email}`;
+    const isProd = process.env.NODE_ENV === 'production';
+    const redirectBase =
+      (isProd
+        ? process.env.GOOGLE_FRONT_END_REDIRECT_URL_PROD
+        : process.env.GOOGLE_FRONT_END_REDIRECT_URL) ||
+      process.env.GOOGLE_FRONT_END_REDIRECT_URL;
+
+    const frontendRedirectUrl = `${redirectBase}?token=${accessToken}&userId=${user._id}&role=${user.role}&firstName=${user.firstName}&lastName=${user.lastName}&email=${user.email}`;
 
     // Use the express response object to handle the redirect
     res.redirect(frontendRedirectUrl);

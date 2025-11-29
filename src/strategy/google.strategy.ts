@@ -14,10 +14,17 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     private configService: ConfigService,
     private authService: AuthService,
   ) {
+    const isProd = configService.get<string>('NODE_ENV') === 'production';
+    const callbackURL =
+      (isProd
+        ? configService.get<string>('GOOGLE_CALLBACK_URL_PROD')
+        : configService.get<string>('GOOGLE_CALLBACK_URL')) ||
+      configService.get<string>('GOOGLE_CALLBACK_URL');
+
     super({
       clientID: configService.get('GOOGLE_CLIENT_ID')!,
       clientSecret: configService.get('GOOGLE_CLIENT_SECRET')!,
-      callbackURL: configService.get('GOOGLE_CALLBACK_URL')!,
+      callbackURL: callbackURL!,
       scope: ['email', 'profile'], // Request email and profile data
     } as StrategyOptions);
   }

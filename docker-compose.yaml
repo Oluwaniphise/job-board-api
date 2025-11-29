@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  nestjs_app:
+    image: my-job-board-app:latest
+    container_name: my-job-board-api
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env # ⬅️ Loads all variables from this file
